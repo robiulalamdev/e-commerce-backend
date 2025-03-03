@@ -1,9 +1,8 @@
-/* eslint-disable @typescript-eslint/no-this-alias */
 import { Schema, model } from 'mongoose';
 import { IUser, UserModel } from './user.interface';
 import bcrypt from 'bcrypt';
 import config from '../../config';
-import { userRoleEnum } from './user.constant';
+import { USER_CONSTANTS } from './user.constant';
 
 const userSchema = new Schema<IUser>(
   {
@@ -18,6 +17,11 @@ const userSchema = new Schema<IUser>(
     },
     password: {
       type: String,
+      required: true,
+    },
+    role: {
+      type: String,
+      enum: USER_CONSTANTS.ROLES_ENUM,
       required: true,
     },
   },
