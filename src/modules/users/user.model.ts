@@ -18,11 +18,27 @@ const userSchema = new Schema<IUser>(
     password: {
       type: String,
       required: true,
+      select: false,
     },
     role: {
       type: String,
-      enum: USER_CONSTANTS.ROLES_ENUM,
+      enum: USER_CONSTANTS.ROLES.ROLES_ENUM,
+      default: USER_CONSTANTS.ROLES.ROLES_OBJECT.USER,
       required: true,
+    },
+    status: {
+      type: String,
+      enum: USER_CONSTANTS.STATUS.STATUS_ENUM,
+      default: USER_CONSTANTS.STATUS.STATUS_OBJECT.ACTIVE,
+      required: true,
+    },
+    isVerified: {
+      type: Boolean,
+      default: false,
+    },
+    lastLogin: {
+      type: Date,
+      default: null,
     },
   },
   {
