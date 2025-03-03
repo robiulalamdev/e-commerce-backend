@@ -1,0 +1,15 @@
+const PRODUCT_DISCOUNT_TYPE_OBJECT = {
+  PERCENTAGE: 'Percentage',
+  FIXED: 'Fixed',
+} as const;
+
+export const PRODUCT_DISCOUNT_TYPE_ENUM = Object.values(
+  PRODUCT_DISCOUNT_TYPE_OBJECT,
+);
+
+export const PRODUCT_CONSTANTS = {
+  DISCOUNT: {
+    TYPE: PRODUCT_DISCOUNT_TYPE_OBJECT,
+    ENUM: PRODUCT_DISCOUNT_TYPE_ENUM,
+  },
+} as const;
