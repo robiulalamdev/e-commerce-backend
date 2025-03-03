@@ -1,5 +1,6 @@
 import { Schema, model } from 'mongoose';
 import { ICart, ICartModel } from './cart.interface';
+import Product from '../product/product.model';
 
 const CartItemSchema = new Schema({
   product: { type: Schema.Types.ObjectId, ref: 'Product', required: true },
@@ -28,15 +29,24 @@ const CartSchema = new Schema<ICart>(
 CartSchema.pre('save', async function (next) {
   const cart = this;
 
-  // Loop through each item in the cart
   for (const item of cart.items) {
-    if (!item.price || item.price <= 0) {
-      const product = await Product.findById(item.product).select('price'); // Fetch latest price
-      if (product) {
-        item.price = product.price; // Set price snapshot
-      } else {
-        return next(new Error('Product not found'));
+    // Always fetch product price to ensure consistency
+    const product = await Product.findById(item.product).select(
+      'price variations',
+    );
+
+    if (!product) {
+      return next(new Error('Product not found'));
+    }
+
+    // Set price based on product variations or single price
+    if (product.variations && product.variations.length > 0) {
+      item.price = product.variations[0].price; // Use first variation's price
+    } else {
+      if (!product.price) {
+        return next(new Error('Product price is not set'));
       }
+      item.price = product.price; // Use product's price
     }
   }
 
